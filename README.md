@@ -1,2 +1,2 @@
-# conquer-uranus-core
-This is the official repository of ConquerUranus
+# Conquer Uranus
+Welcome to the official repository of ConquerUranus!!
