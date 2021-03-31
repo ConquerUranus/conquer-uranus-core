@@ -1,0 +1,24 @@
+{
+  "name": "conquer-uranus-core",
+  "version": "1.0.0",
+  "description": "Core of Conquer Uranus",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-ASSnonymus:ConquerUranus/conquer-uranus-core"
+  },
+  "keywords": [
+    "Space",
+    "Universe",
+    "Uranus",
+    "Anus"
+  ],
+  "author": "ConquerUranus",
+  "license": "MIT"
+}
