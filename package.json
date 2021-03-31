@@ -20,5 +20,8 @@
     "Anus"
   ],
   "author": "ConquerUranus",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.0.0"
+  }
 }
