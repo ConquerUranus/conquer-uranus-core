@@ -7,7 +7,7 @@ import "./BEP20.sol";
 
 /// @author The Development Team
 /// @title Token
-contract Token is BEP20("ZZZ_TestToken", "ZZZT", 18) {
+contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
 
     using SafeMath for uint256;
     using Address for address;

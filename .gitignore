@@ -103,5 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# JetBrains
-.idea
+# Other files
+secrets.json
+build/
