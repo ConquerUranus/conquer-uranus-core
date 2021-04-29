@@ -39,7 +39,8 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
     IPancakeRouter02 public immutable pancakeRouter;
     address public immutable pancakePair;
 
-    address public vaultAddress;
+    address public blackHoleVaultAddress;
+    address public spaceWasteVaultAddress;
     address public devAddress;
 
     bool inSwapAndLiquify;
@@ -69,27 +70,29 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
         require(
             _msgSender() == owner() ||
             _msgSender() == devAddress ||
-            _msgSender() == vaultAddress
+            _msgSender() == blackHoleVaultAddress
         );
         _;
     }
 
     /// Modifier that restricts a function only for vault address
     modifier onlyVault {
-        require(_msgSender() == vaultAddress);
+        require(_msgSender() == blackHoleVaultAddress);
         _;
     }
 
     constructor (
-        address vaultAddress_,
+        address blackHoleVaultAddress_,
         address devAddress_,
-        address routerAddress_
+        address routerAddress_,
+        address spaceWasteVaultAddress_
     )
     {
 
         // Declaration of addresses
-        vaultAddress = vaultAddress_;
+        blackHoleVaultAddress = blackHoleVaultAddress_;
         devAddress = devAddress_;
+        spaceWasteVaultAddress = spaceWasteVaultAddress_;
 
         swapAndLiquifyEnabled = true;
 
@@ -106,8 +109,9 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
         // Excluding main accounts from rewards
         excludeFromReward(address(this));
         excludeFromReward(owner());
-        excludeFromReward(vaultAddress);
+        excludeFromReward(blackHoleVaultAddress);
         excludeFromReward(devAddress);
+        excludeFromReward(spaceWasteVaultAddress);
 
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
@@ -157,11 +161,13 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
     /// This is the public function to send the half of tokens in vault to the black hole
     /// and the other half to the dev wallet
     /// @return a boolean value
-    function sendToTheVoidAndDevWallet() public onlyVault returns (bool) {
+    function sendToTheVoidDevAndSpaceWasteWallet() public onlyVault returns (bool) {
         // Take tokens from vault
-        uint256 amountToBlackHole = _tOwned[vaultAddress].div(2);
-        uint256 amountToDev = _tOwned[vaultAddress].sub(amountToBlackHole);
-        _tOwned[vaultAddress] = 0;
+        uint256 amountToBlackHole = _tOwned[blackHoleVaultAddress].div(2);
+        uint256 amountToDistribute = _tOwned[blackHoleVaultAddress].sub(amountToBlackHole);
+        uint256 amountToDev = amountToDistribute.div(2);
+        uint256 amountToSpaceWasteVault = amountToDistribute.sub(amountToDev);
+        _tOwned[blackHoleVaultAddress] = 0;
 
         // We distribute to black hole and developers wallet
         // Sending to black hole
@@ -169,7 +175,9 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
 
         // Sending to devs wallet
         _tOwned[devAddress] = _tOwned[devAddress].add(amountToDev);
-        emit Transfer(vaultAddress, devAddress, amountToDev);
+        _tOwned[spaceWasteVaultAddress] = _tOwned[spaceWasteVaultAddress].add(amountToSpaceWasteVault);
+        emit Transfer(blackHoleVaultAddress, devAddress, amountToDev);
+        emit Transfer(blackHoleVaultAddress, spaceWasteVaultAddress, amountToSpaceWasteVault);
         return true;
     }
 
@@ -492,10 +500,10 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
     function _takeVault(uint256 tVault) private {
         uint256 currentRate =  _getRate();
         uint256 rVault = tVault.mul(currentRate);
-        _rOwned[vaultAddress] = _rOwned[vaultAddress].add(rVault);
+        _rOwned[blackHoleVaultAddress] = _rOwned[blackHoleVaultAddress].add(rVault);
         if(_isExcludedFromReward[address(this)])
-            _tOwned[vaultAddress] = _tOwned[vaultAddress].add(tVault);
-        emit Transfer(_msgSender(), vaultAddress, tVault);
+            _tOwned[blackHoleVaultAddress] = _tOwned[blackHoleVaultAddress].add(tVault);
+        emit Transfer(_msgSender(), blackHoleVaultAddress, tVault);
     }
 
     /// This function calls _getTvalues and _getRValues to obtain all the values
