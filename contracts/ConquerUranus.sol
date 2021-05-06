@@ -20,7 +20,7 @@ contract ConquerUranus is BEP20("ConquerUranus", "ANVS", 18) {
     address[] private _excludedFromReward;
 
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 2543164 * 10**3 * 10**18;
+    uint256 private _tTotal = 2543164 * 10**6 * 10**18;
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
