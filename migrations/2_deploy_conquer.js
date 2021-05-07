@@ -1,4 +1,4 @@
-const Token = artifacts.require("Token");
+const Token = artifacts.require("ConquerUranus");
 
 const blackHoleVaultAddress = '0x7d7ca00C504Ec3d64325d27c16B9EdC1D04413d3';
 const spaceWasteVaultAddress = '0x8749e0E2E09C22cdD5A33F26a7B768a3b1ee922f';
